@@ -9,6 +9,7 @@ const requestRoute = require("./routes/request");
 const app = express();
 
 app.use(json());
+app.use("/uploads", express.static(__dirname + "/uploads"));
 
 app.get("/", (_, res) => {
   res.send("Hello i am not dead ;)");

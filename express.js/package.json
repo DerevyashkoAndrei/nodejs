@@ -5,7 +5,8 @@
     "express": "^4.17.1",
     "express-validator": "^6.12.1",
     "http-status-codes": "^2.1.4",
-    "jsonwebtoken": "^8.5.1"
+    "jsonwebtoken": "^8.5.1",
+    "multer": "^1.4.3"
   },
   "scripts": {
     "dev": "nodemon src/index"

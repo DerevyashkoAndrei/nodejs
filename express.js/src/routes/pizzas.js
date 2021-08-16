@@ -2,6 +2,7 @@ const { Router } = require("express");
 const { admin } = require("../middleware/authMiddleware");
 const { logRequest } = require("../middleware/loggerMiddleware");
 const PizzaService = require("../services/PizzaService");
+const { pizzasUploads } = require("../services/UploadService");
 const { validate } = require("../middleware/validationMiddleware");
 const { validateParamId } = require("../middleware/validators/commonValidator");
 const {
@@ -10,6 +11,7 @@ const {
 } = require("../middleware/validators/pizzaValidator");
 const { StatusCodes } = require("http-status-codes");
 const { toInt } = require("../middleware/sanitizers/commonSanitizer");
+const { UPLOADS_FOLDER, PIZZA_IMAGES } = require("../config");
 
 const pizzaRoute = Router();
 
@@ -20,10 +22,27 @@ pizzaRoute.get("/", (req, res) => {
   res.send(list);
 });
 
-pizzaRoute.post("/", isPizza, validate, admin, (req, res) => {
-  const pizza = PizzaService.create(req.body);
-  res.send(pizza);
-});
+pizzaRoute.post(
+  "/",
+  pizzasUploads.fields([{ name: "main", maxCount: 1 }]),
+  isPizza,
+  validate,
+  admin,
+  (_, __, next) => {
+    console.log(_.body, _.files, _.headers["content-type"]);
+    next();
+  },
+  (req, res) => {
+    if (req.files && req.files.main && !req.files.main[0])
+      return res.sendStatus(StatusCodes.BAD_REQUEST);
+    const pizza = PizzaService.create(
+      Object.assign({}, req.body, {
+        photo: `${UPLOADS_FOLDER + PIZZA_IMAGES}${req.files.main[0].filename}`,
+      })
+    );
+    res.send(pizza);
+  }
+);
 
 pizzaRoute.use(
   "/:id",
