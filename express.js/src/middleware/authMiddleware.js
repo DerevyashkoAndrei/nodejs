@@ -44,14 +44,6 @@ exports.admin = (req, res, next) => {
   }
 };
 
-exports.user = (req, res, next) => {
-  res.locals.user = {
-    role: req.headers.authorization || null,
-    name: "username",
-  };
-  next();
-};
-
 exports.createTokens = (_, res) => {
   const { uid, role } = res.locals;
   res.send({
@@ -63,5 +55,3 @@ exports.createTokens = (_, res) => {
     }),
   });
 };
-
-
