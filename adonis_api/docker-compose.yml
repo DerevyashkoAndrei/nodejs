@@ -1,0 +1,40 @@
+version: '3.9'
+services:
+  server:
+    build:
+      context: .
+    image: adonis-pizza/server
+    ports:
+      - 3334:3333
+    depends_on:
+      - db
+    environment:
+      - PORT=3333
+      - HOST=server
+      - NODE_ENV=production
+      - APP_KEY=k5fAyRjbPPefcRSXVMDcF_lkyGX00sLK
+      - DB_CONNECTION=mysql
+      - MYSQL_HOST=db
+      - MYSQL_PORT=3306
+      - MYSQL_USER=db_user
+      - MYSQL_PASSWORD=db_password
+      - MYSQL_DB_NAME=adonis-pizza
+  db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    ports:
+      - '3308:3306'
+    volumes:
+      - ./conf.cnf:/etc/mysql/conf.d/conf.cnf
+      - ./empty_bd.sql:/docker-entrypoint-initdb.d/empty_bd.sql
+      - ./fillResult.sql:/docker-entrypoint-initdb.d/fillResult.sql
+    networks:
+      - adonis-pizza
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=adonis-pizza
+      - MYSQL_USER=db_user
+      - MYSQL_PASSWORD=db_password
+
+networks:
+  adonis-pizza:
