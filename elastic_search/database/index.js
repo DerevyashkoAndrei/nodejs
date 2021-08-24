@@ -19,28 +19,6 @@ async function run(index, folder) {
         });
     }
   }
-
-  // await new Promise((resolve) => {
-  //   files.forEach((file) => {
-  //     const personsJSON = fs.readFileSync(path.join(__dirname, folder, file));
-  //     const persons = JSON.parse(personsJSON);
-  //     persons.forEach(async (body, i, arr) => {
-  //       await client
-  //         .index({
-  //           index: index,
-  //           body,
-  //         })
-  //         .catch(() => {
-  //           console.log(`error add ${body}`);
-  //         })
-  //         .finally(() => {
-  //           if (i + 1 === arr.length) resolve();
-  //         });
-  //     });
-  // fs.writeFileSync(path.join(__dirname, "cash_films", file), personsJSON);
-  // fs.unlinkSync(path.join(__dirname, "films", file));
-  //   });
-  // });
 }
 
 module.exports = async (index) => {
